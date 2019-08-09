@@ -68,7 +68,7 @@ def addSubscriber(subscriber, subscribedTo, subreddit):
 
     dbConn.commit()
     print("Subscription added")
-    
+
     return True
 
 def removeSubscriber(subscriber, subscribedTo, subreddit):
@@ -105,7 +105,7 @@ def mark_post(post):
 
     dbConn.commit()
     print("Post marked")
-    
+
     return True
 
 # Saving time by checking if we've already looked at the post
@@ -139,6 +139,48 @@ def sticky_checker(post):
                 bot = True
                 return (bot, stickied)
     return (bot, stickied)
+
+# Return the time between an two Unix timestamps in human-friendly mode.
+def time_elapsed(former_time, latter_time=""):
+
+    SECOND = 1
+    MINUTE = 60 * SECOND
+    HOUR = 60 * MINUTE
+    DAY = 24 * HOUR
+    WEEK = 7 * DAY
+    MONTH = 30 * DAY
+    YEAR = 365 * DAY
+
+    unit = SECOND
+    time_period = "second"
+    plural = ""
+
+    if latter_time == '': latter_time = time.time()
+    elapsed = int(latter_time - former_time)
+
+    if abs(elapsed) >= YEAR:
+        unit = YEAR
+        time_period = "year"
+    elif abs(elapsed) >= MONTH:
+        unit = MONTH
+        time_period = "month"
+    elif abs(elapsed) >= WEEK:
+        unit = WEEK
+        time_period = "week"
+    elif abs(elapsed) >= DAY:
+        unit = DAY
+        time_period = "day"
+    elif abs(elapsed) >= HOUR:
+        unit = HOUR
+        time_period = "hour"
+    elif abs(elapsed) >= MINUTE:
+        unit = MINUTE
+        time_period = "minute"
+
+    if elapsed >= unit * 2:
+        plural = "s"
+
+    return f"{elapsed//unit:d} {time_period}{plural}"
 
 # Get subscription/unsubscription requests
 def get_messages():
@@ -196,7 +238,7 @@ def get_posts(subreddit):
                 longer = False
                 # Construct the history part of the comment
                 for entry in history[1:]:
-                    welcome = welcome + ("* [{}]({})\n\n".format(str((entry.title)), str((entry.permalink))))
+                    welcome = welcome + ("* [{}]({}), {} ago\n\n".format(str((entry.title)), str((entry.permalink)), time_elapsed(entry.created_utc, post.created_utc)))
                     count = count + 1 
                     # There's limited space, only post 10
                     if count == 10:
