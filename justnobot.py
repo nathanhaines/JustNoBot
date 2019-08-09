@@ -5,7 +5,7 @@ import string
 import sqlite3
 
 USER_AGENT = "bot1"
-BOT_NAME = "TheJustNoBot" 
+BOT_NAME = "botinlaw"
 DATABASE = "justno.db"
 
 # Sqlite database: will need changed to a better database
@@ -187,7 +187,7 @@ def get_posts(subreddit):
             message = ''
             # First time poster
             if len(history) <= 1:
-                welcome = "Welcome to /r/{}!\n\nI'm JustNoBot. I help people follow your posts!\n\n".format(post.subreddit)
+                welcome = "Welcome to /r/{}!\n\nI'm {}. I help people follow your posts!\n\n".format(post.subreddit, BOT_NAME)
             # Previous poster
             else:
                 welcome = "Other posts from /u/{}:\n\n\n".format(str((post.author)))
@@ -288,7 +288,7 @@ if __name__ == '__main__':
     reddit = praw.Reddit(USER_AGENT)
 
     # Figure out how to parallelize this
-    subs = ["Justnofil", "JustNoSO", "JustNoFamFiction", "JustNoFriend", "JUSTNOFAMILY", "JustNoDIL"]
+    subs = ["JUSTNOMIL", "JustNoSO"]
     while True:
         get_messages()
         print("Messages gotten, getting posts")
